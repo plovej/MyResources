@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical" >
+
+    <FrameLayout
+        android:id="@+id/view_mainBody"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        >
+    </FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/noData"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="28dp"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/noData_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@mipmap/data_error" />
+
+        <TextView
+            android:id="@+id/nodata_text1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="11dp"
+            android:layout_below="@id/noData_image"
+            android:layout_centerHorizontal="true"
+            android:text="网络未连接，请检查网络设置"
+            android:textColor="#7A7A7C" />
+
+        <TextView
+            android:id="@+id/nodata_text2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/nodata_text1"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="11dp"
+            android:text="点击屏幕重试"
+            android:textColor="#7A7A7C" />
+    </RelativeLayout>
+
+</LinearLayout>

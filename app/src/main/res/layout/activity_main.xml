@@ -1,11 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
 
-    <TextView android:text="Hello World!" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <FrameLayout
+        android:id="@+id/flayout_tab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:baselineAligned="false" >
+
+            <Button
+                android:id="@+id/btn_tab1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="25dp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:drawablePadding="8dp"
+                android:drawableTop="@mipmap/home_bottom_home_normal"
+                android:gravity="center"
+                android:text="首页"
+                android:textColor="#000"
+                android:textSize="11sp" />
+
+            <Button
+                android:id="@+id/btn_tab2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="25dp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:drawablePadding="8dp"
+                android:drawableTop="@mipmap/home_bottom_video_normal"
+                android:gravity="center"
+                android:text="视频"
+                android:textColor="#000"
+                android:textSize="11sp" />
+
+
+            <Button
+                android:id="@+id/btn_tab4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="25dp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:drawablePadding="8dp"
+                android:drawableTop="@mipmap/home_bottom_find_normal"
+                android:gravity="center"
+                android:text="发现"
+                android:textColor="#000"
+                android:textSize="11sp" />
+
+            <Button
+                android:id="@+id/btn_tab5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="25dp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:drawablePadding="8dp"
+                android:drawableTop="@mipmap/home_bottom_me_normal"
+                android:gravity="center"
+                android:text="我的"
+                android:textColor="#000"
+                android:textSize="11sp" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/fragment_viewpager"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@id/flayout_tab"
+        android:layout_alignParentTop="true"
+        android:background="#fff" >
+    </android.support.v4.view.ViewPager>
+
 </RelativeLayout>

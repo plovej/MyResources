@@ -1,6 +1,7 @@
 package com.myresources;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -145,6 +146,27 @@ public class MyBaseActivity extends FragmentActivity implements View.OnClickList
         }else{
             loadError(false);
         }
+    }
+
+    /**
+     * intent封装 ,不支持参数,无参跳转
+     * @param toClsActivity 需要跳转到的activity
+     */
+    public void goIntent(Class<?> toClsActivity) {
+        goIntent(toClsActivity, null);
+    }
+
+    /**
+     * intent封装 ,支持参数携带
+     * @param toClsActivity 需要跳转到的activity
+     * @param bundle 参数封装
+     */
+    public void goIntent(Class<?> toClsActivity, Bundle bundle) {
+        Intent intent = new Intent(this, toClsActivity);
+        if (bundle != null) {
+            intent.putExtras(bundle);
+        }
+        startActivity(intent);
     }
 
     /**

@@ -8,11 +8,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.MapView;
 import com.myresources.R;
 
 public class HomeFragment extends Fragment{
+	//获取地图控件引用
+	MapView mMapView = null;
+	BaiduMap mBaiduMap;
 	View view;
 	private TextView main_tv;
 	@Override
@@ -30,24 +34,8 @@ public class HomeFragment extends Fragment{
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Log.d("---111-----",  "onCreateView");
-		view = inflater.inflate(R.layout.main_fragment, null);
-		main_tv = (TextView) view.findViewById(R.id.main_tv);
-		main_tv.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-//				showDialog(getActivity(), "提示", "是否取消支付？",
-//						"是",R.color.w_c14, "否",R.color.w_c14,true,new DialogOnClickListener() {
-//							@Override
-//							public void onSure(View v) {
-//								Toast.makeText(getActivity(), "确定", 0).show();
-//							}
-//							@Override
-//							public void onCancle(View v) {
-//								Toast.makeText(getActivity(), "取消", 0).show();
-//							}
-//						});
-			}
-		});
+		View view = inflater.inflate(R.layout.main_fragment,null);
+		mMapView = (MapView) view.findViewById(R.id.bmapView);
 		return view;
 	}
 	@Override
@@ -56,25 +44,29 @@ public class HomeFragment extends Fragment{
 		super.onActivityCreated(savedInstanceState);
 		Log.d("---111-----",  "onActivityCreated");
 	}
-	
+
 	@Override
 	public void onStart() {
 		// TODO Auto-generated method stub
 		super.onStart();
 		Log.d("---111-----",  "onStart");
 	}
-	
+
 	@Override
 	public void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
+		//在activity执行onResume时执行mMapView. onResume ()，实现地图生命周期管理
+		mMapView.onResume();
 		Log.d("---111-----",  "onResume");
 	}
-	
+
 	@Override
 	public void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
+		//在activity执行onPause时执行mMapView. onPause ()，实现地图生命周期管理
+		mMapView.onPause();
 		Log.d("---111-----",  "onPause");
 	}
 	@Override
@@ -89,11 +81,13 @@ public class HomeFragment extends Fragment{
 		super.onDestroyView();
 		Log.d("---111-----",  "onDestroyView");
 	}
-	
+
 	@Override
 	public void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
+		//在activity执行onDestroy时执行mMapView.onDestroy()，实现地图生命周期管理
+		mMapView.onDestroy();
 		Log.d("---111-----",  "onDestroy");
 	}
 	@Override

@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.View;
@@ -16,6 +15,7 @@ import com.myresources.fragment.HomeFragment;
 import com.myresources.fragment.MeFragment;
 import com.myresources.fragment.VideoFragment;
 import com.myresources.fragment.ViewPager_Adapter;
+import com.myresources.util.ViewPagerCompat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ import java.util.List;
 public class MainActivity extends MyBaseActivity {
 
     private Button bt1,bt2,bt4,bt5;
-    private ViewPager viewpager;
+    private ViewPagerCompat viewpager;
     private FragmentManager fm;
     List<Fragment> list_fragment;
     Drawable d;
@@ -47,7 +47,7 @@ public class MainActivity extends MyBaseActivity {
         bt2 = (Button) findViewById(R.id.btn_tab2);
         bt4 = (Button) findViewById(R.id.btn_tab4);
         bt5 = (Button) findViewById(R.id.btn_tab5);
-        viewpager = (ViewPager) findViewById(R.id.fragment_viewpager);
+        viewpager = (ViewPagerCompat) findViewById(R.id.fragment_viewpager);
 
         bt1.setOnClickListener(this);
         bt2.setOnClickListener(this);
@@ -69,34 +69,7 @@ public class MainActivity extends MyBaseActivity {
             @Override
             public void onPageSelected(int arg0) {
                 // TODO Auto-generated method stub
-                switch (arg0){
-                    case 0:
-                        getSetting(bt1, R.mipmap.home_bottom_home_selected, R.color.color_red);
-                        getSetting(bt2, R.mipmap.home_bottom_video_normal, R.color.color_black);
-                        getSetting(bt4, R.mipmap.home_bottom_find_normal, R.color.color_black);
-                        getSetting(bt5, R.mipmap.home_bottom_me_normal, R.color.color_black);
-                        break;
-                    case 1:
-                        getSetting(bt2, R.mipmap.home_bottom_video_selected, R.color.color_red);
-                        getSetting(bt1, R.mipmap.home_bottom_home_normal, R.color.color_black);
-                        getSetting(bt4, R.mipmap.home_bottom_find_normal, R.color.color_black);
-                        getSetting(bt5, R.mipmap.home_bottom_me_normal, R.color.color_black);
-                        break;
-                    case 2:
-                        getSetting(bt4, R.mipmap.home_bottom_find_selected, R.color.color_red);
-                        getSetting(bt1, R.mipmap.home_bottom_home_normal, R.color.color_black);
-                        getSetting(bt2, R.mipmap.home_bottom_video_normal, R.color.color_black);
-                        getSetting(bt5, R.mipmap.home_bottom_me_normal, R.color.color_black);
-                        break;
-                    case 3:
-                        getSetting(bt5, R.mipmap.home_bottom_me_selected, R.color.color_red);
-                        getSetting(bt1, R.mipmap.home_bottom_home_normal, R.color.color_black);
-                        getSetting(bt2, R.mipmap.home_bottom_video_normal, R.color.color_black);
-                        getSetting(bt4, R.mipmap.home_bottom_find_normal, R.color.color_black);
-                        break;
-
-                }
-
+                getColorChange(arg0);
             }
 
             @Override
@@ -124,31 +97,19 @@ public class MainActivity extends MyBaseActivity {
         switch (v.getId()) {
             case R.id.btn_tab1:
                 viewpager.setCurrentItem(0);
-                getSetting(bt1, R.mipmap.home_bottom_home_selected, R.color.color_red);
-                getSetting(bt2, R.mipmap.home_bottom_video_normal, R.color.color_black);
-                getSetting(bt4, R.mipmap.home_bottom_find_normal, R.color.color_black);
-                getSetting(bt5, R.mipmap.home_bottom_me_normal, R.color.color_black);
+                getColorChange(0);
                 break;
             case R.id.btn_tab2:
                 viewpager.setCurrentItem(1);
-                getSetting(bt2, R.mipmap.home_bottom_video_selected, R.color.color_red);
-                getSetting(bt1, R.mipmap.home_bottom_home_normal, R.color.color_black);
-                getSetting(bt4, R.mipmap.home_bottom_find_normal, R.color.color_black);
-                getSetting(bt5, R.mipmap.home_bottom_me_normal, R.color.color_black);
+                getColorChange(1);
                 break;
             case R.id.btn_tab4:
                 viewpager.setCurrentItem(2);
-                getSetting(bt4, R.mipmap.home_bottom_find_selected, R.color.color_red);
-                getSetting(bt1, R.mipmap.home_bottom_home_normal, R.color.color_black);
-                getSetting(bt2, R.mipmap.home_bottom_video_normal, R.color.color_black);
-                getSetting(bt5, R.mipmap.home_bottom_me_normal, R.color.color_black);
+                getColorChange(2);
                 break;
             case R.id.btn_tab5:
                 viewpager.setCurrentItem(3);
-                getSetting(bt5, R.mipmap.home_bottom_me_selected, R.color.color_red);
-                getSetting(bt1, R.mipmap.home_bottom_home_normal, R.color.color_black);
-                getSetting(bt2, R.mipmap.home_bottom_video_normal, R.color.color_black);
-                getSetting(bt4, R.mipmap.home_bottom_find_normal, R.color.color_black);
+                getColorChange(3);
                 break;
 
             default:
@@ -201,5 +162,36 @@ public class MainActivity extends MyBaseActivity {
                 break;
         }
         return super.onKeyDown(keyCode, event);
+    }
+    public void  getColorChange(int number){
+        switch (number){
+            case 0:
+                getSetting(bt1, R.mipmap.home_bottom_home_selected, R.color.color_red);
+                getSetting(bt2, R.mipmap.home_bottom_video_normal, R.color.color_black);
+                getSetting(bt4, R.mipmap.home_bottom_find_normal, R.color.color_black);
+                getSetting(bt5, R.mipmap.home_bottom_me_normal, R.color.color_black);
+                break;
+            case 1:
+                getSetting(bt2, R.mipmap.home_bottom_video_selected, R.color.color_red);
+                getSetting(bt1, R.mipmap.home_bottom_home_normal, R.color.color_black);
+                getSetting(bt4, R.mipmap.home_bottom_find_normal, R.color.color_black);
+                getSetting(bt5, R.mipmap.home_bottom_me_normal, R.color.color_black);
+                break;
+            case 2:
+                getSetting(bt4, R.mipmap.home_bottom_find_selected, R.color.color_red);
+                getSetting(bt1, R.mipmap.home_bottom_home_normal, R.color.color_black);
+                getSetting(bt2, R.mipmap.home_bottom_video_normal, R.color.color_black);
+                getSetting(bt5, R.mipmap.home_bottom_me_normal, R.color.color_black);
+                break;
+            case 3:
+                getSetting(bt5, R.mipmap.home_bottom_me_selected, R.color.color_red);
+                getSetting(bt1, R.mipmap.home_bottom_home_normal, R.color.color_black);
+                getSetting(bt2, R.mipmap.home_bottom_video_normal, R.color.color_black);
+                getSetting(bt4, R.mipmap.home_bottom_find_normal, R.color.color_black);
+                break;
+
+            default:
+                break;
+        }
     }
 }

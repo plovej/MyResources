@@ -69,6 +69,33 @@ public class MainActivity extends MyBaseActivity {
             @Override
             public void onPageSelected(int arg0) {
                 // TODO Auto-generated method stub
+                switch (arg0){
+                    case 0:
+                        getSetting(bt1, R.mipmap.home_bottom_home_selected, R.color.color_red);
+                        getSetting(bt2, R.mipmap.home_bottom_video_normal, R.color.color_black);
+                        getSetting(bt4, R.mipmap.home_bottom_find_normal, R.color.color_black);
+                        getSetting(bt5, R.mipmap.home_bottom_me_normal, R.color.color_black);
+                        break;
+                    case 1:
+                        getSetting(bt2, R.mipmap.home_bottom_video_selected, R.color.color_red);
+                        getSetting(bt1, R.mipmap.home_bottom_home_normal, R.color.color_black);
+                        getSetting(bt4, R.mipmap.home_bottom_find_normal, R.color.color_black);
+                        getSetting(bt5, R.mipmap.home_bottom_me_normal, R.color.color_black);
+                        break;
+                    case 2:
+                        getSetting(bt4, R.mipmap.home_bottom_find_selected, R.color.color_red);
+                        getSetting(bt1, R.mipmap.home_bottom_home_normal, R.color.color_black);
+                        getSetting(bt2, R.mipmap.home_bottom_video_normal, R.color.color_black);
+                        getSetting(bt5, R.mipmap.home_bottom_me_normal, R.color.color_black);
+                        break;
+                    case 3:
+                        getSetting(bt5, R.mipmap.home_bottom_me_selected, R.color.color_red);
+                        getSetting(bt1, R.mipmap.home_bottom_home_normal, R.color.color_black);
+                        getSetting(bt2, R.mipmap.home_bottom_video_normal, R.color.color_black);
+                        getSetting(bt4, R.mipmap.home_bottom_find_normal, R.color.color_black);
+                        break;
+
+                }
 
             }
 

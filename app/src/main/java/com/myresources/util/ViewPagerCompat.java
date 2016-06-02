@@ -7,7 +7,7 @@ import android.view.View;
 
 /**
  * 作者：范展鹏
- * 邮箱：fanzhanpeng@hskbj.com
+ * 解决百度地图和viewpager滑动时的冲突
  */
 public class ViewPagerCompat extends ViewPager {
 

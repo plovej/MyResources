@@ -9,7 +9,6 @@ import com.baidu.mapapi.SDKInitializer;
  * 邮箱：fanzhanpeng@hskbj.com
  */
 public class BaseApplication extends Application {
-
     @Override
     public void onCreate() {
         super.onCreate();

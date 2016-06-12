@@ -9,7 +9,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -23,12 +25,19 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.search.core.SearchResult;
+import com.baidu.mapapi.search.geocode.GeoCodeOption;
+import com.baidu.mapapi.search.geocode.GeoCodeResult;
+import com.baidu.mapapi.search.geocode.GeoCoder;
+import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.myresources.R;
 
-public class HomeFragment extends Fragment{
+public class HomeFragment extends Fragment implements OnGetGeoCoderResultListener {
 	public LocationClient mLocationClient = null;
 	public BDLocationListener myListener = new MyLocationListener();
 	private LocationClientOption mOption,DIYoption;
+	GeoCoder mSearch = null; // 搜索模块，也可去掉地图模块独立使用
 	//获取地图控件引用
 	MapView mMapView = null;
 	BaiduMap mBaiduMap;
@@ -38,7 +47,7 @@ public class HomeFragment extends Fragment{
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
 		super.onAttach(activity);
-		Log.d("---111-----",  "onAttach");
+		Log.d("---111-----", "onAttach");
 	}
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -49,18 +58,34 @@ public class HomeFragment extends Fragment{
 	}
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		Log.d("---111-----",  "onCreateView");
+		Log.d("---111-----", "onCreateView");
 		View view = inflater.inflate(R.layout.main_fragment,null);
 		mMapView = (MapView) view.findViewById(R.id.bmapView);
 		mBaiduMap = mMapView.getMap();
 		mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
 		mBaiduMap.setMapStatus(MapStatusUpdateFactory.zoomTo(15));
+		// 初始化搜索模块，注册事件监听
+		mSearch = GeoCoder.newInstance();
+		mSearch.setOnGetGeoCodeResultListener(this);
 		return view;
 	}
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
+		/**
+		 * 发起搜索
+		 *
+		 * @param v
+		 */
+		  getView().findViewById(R.id.patient_query_ic).setOnClickListener(new View.OnClickListener() {
+			 @Override
+			 public void onClick(View v) {
+				 EditText editGeoCodeKey = (EditText) getView().findViewById(R.id.patient_search);
+				 // Geo搜索
+				 mSearch.geocode(new GeoCodeOption().city("").address(editGeoCodeKey.getText().toString()));
+			 }
+		 });
 		LocationClientOption mOption = getDefaultLocationClientOption();
 		mOption.setLocationMode(LocationClientOption.LocationMode.Battery_Saving);
 		mOption.setCoorType("bd09ll");
@@ -68,8 +93,9 @@ public class HomeFragment extends Fragment{
 		mLocationClient.setLocOption(mOption);
 		mLocationClient.registerLocationListener( myListener );    //注册监听函数
 		mLocationClient.start();
-		Log.d("---111-----",  "onActivityCreated");
+		Log.d("---111-----", "onActivityCreated");
 	}
+
 
 	@Override
 	public void onStart() {
@@ -84,6 +110,8 @@ public class HomeFragment extends Fragment{
 		super.onResume();
 		//在activity执行onResume时执行mMapView. onResume ()，实现地图生命周期管理
 		mMapView.onResume();
+		EditText editGeoCodeKey = (EditText) getView().findViewById(R.id.patient_search);
+		editGeoCodeKey.setText("");
 		Log.d("---111-----",  "onResume");
 	}
 
@@ -125,6 +153,7 @@ public class HomeFragment extends Fragment{
 		Log.d("---111-----",  "onDetach");
 	}
 
+
 	/***
 	 * 定位结果回调，在此方法中处理定位结果
 	 */
@@ -146,7 +175,7 @@ public class HomeFragment extends Fragment{
 			}
 		}
 	}
-
+	BDLocation location =null;
 	/***
 	 * 接收定位结果消息，并显示在地图上
 	 */
@@ -155,7 +184,7 @@ public class HomeFragment extends Fragment{
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 
-			BDLocation location = msg.getData().getParcelable("loc");
+			 location = msg.getData().getParcelable("loc");
 			if (location != null) {
 				LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
 				BitmapDescriptor bitmap = null;
@@ -187,4 +216,49 @@ public class HomeFragment extends Fragment{
 		return mOption;
 	}
 
+	@Override
+	public void onGetGeoCodeResult(GeoCodeResult result) {
+		if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
+			Toast.makeText(getContext(), "抱歉，未能找到结果", Toast.LENGTH_LONG)
+					.show();
+			return;
+		}
+		mBaiduMap.clear();
+		if (location != null) {
+			LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
+			BitmapDescriptor bitmap = null;
+			bitmap = BitmapDescriptorFactory.fromResource(R.drawable.icon_openmap_focuse_mark);
+			// 构建MarkerOption，用于在地图上添加Marker
+			OverlayOptions option = new MarkerOptions().position(point).icon(bitmap);
+			// 在地图上添加Marker，并显示
+			mBaiduMap.addOverlay(option);
+			mBaiduMap.setMapStatus(MapStatusUpdateFactory.newLatLng(point));
+		}
+		mBaiduMap.addOverlay(new MarkerOptions().position(result.getLocation())
+				.icon(BitmapDescriptorFactory
+						.fromResource(R.drawable.icon_gcoding)));
+		mBaiduMap.setMapStatus(MapStatusUpdateFactory.newLatLng(result
+				.getLocation()));
+		String strInfo = String.format("纬度：%f 经度：%f",
+				result.getLocation().latitude, result.getLocation().longitude);
+		Toast.makeText(getContext(), strInfo, Toast.LENGTH_LONG).show();
+	}
+
+	@Override
+	public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
+		if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
+			Toast.makeText(getContext(), "抱歉，未能找到结果", Toast.LENGTH_LONG)
+					.show();
+			return;
+		}
+		mBaiduMap.clear();
+		mBaiduMap.addOverlay(new MarkerOptions().position(result.getLocation())
+				.icon(BitmapDescriptorFactory
+						.fromResource(R.drawable.icon_gcoding)));
+		mBaiduMap.setMapStatus(MapStatusUpdateFactory.newLatLng(result
+				.getLocation()));
+		Toast.makeText(getContext(), result.getAddress(),
+				Toast.LENGTH_LONG).show();
+
+	}
 }

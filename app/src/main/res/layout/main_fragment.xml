@@ -3,11 +3,42 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
+
 	<com.baidu.mapapi.map.MapView
 		android:id="@+id/bmapView"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
 		android:clickable="true" />
-
+	<FrameLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="#FFFFFF"
+		>
+		<RelativeLayout
+			android:id="@+id/queryLinearLayout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_margin="10dp"
+			android:orientation="horizontal"
+			>
+			<EditText
+				android:background="@drawable/selection_input_bg"
+				android:id="@+id/patient_search"
+				android:layout_width="match_parent"
+				android:layout_height="45dp"
+				android:clickable="false"
+				android:focusableInTouchMode="true"
+				android:hint="搜索地点" />
+			<ImageView
+				android:onClick="searchButtonProcess"
+				android:layout_marginRight="10dp"
+				android:layout_alignParentRight="true"
+				android:id="@+id/patient_query_ic"
+				android:layout_width="40dp"
+				android:layout_height="40dp"
+				android:scaleType="center"
+				android:src="@drawable/search_ic"/>
+		</RelativeLayout>
+	</FrameLayout>
 
 </RelativeLayout>

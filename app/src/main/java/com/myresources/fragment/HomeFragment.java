@@ -20,10 +20,12 @@ import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MarkerOptions;
-import com.baidu.mapapi.map.OverlayOptions;
+import com.baidu.mapapi.map.MyLocationConfiguration;
+import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.core.SearchResult;
 import com.baidu.mapapi.search.geocode.GeoCodeOption;
@@ -38,6 +40,9 @@ public class HomeFragment extends Fragment implements OnGetGeoCoderResultListene
 	public BDLocationListener myListener = new MyLocationListener();
 	private LocationClientOption mOption,DIYoption;
 	GeoCoder mSearch = null; // 搜索模块，也可去掉地图模块独立使用
+	boolean isFirstLoc = true; // 是否首次定位
+	BitmapDescriptor mCurrentMarker;
+	private MyLocationConfiguration.LocationMode mCurrentMode;
 	//获取地图控件引用
 	MapView mMapView = null;
 	BaiduMap mBaiduMap;
@@ -60,8 +65,12 @@ public class HomeFragment extends Fragment implements OnGetGeoCoderResultListene
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Log.d("---111-----", "onCreateView");
 		View view = inflater.inflate(R.layout.main_fragment,null);
+		mCurrentMode = MyLocationConfiguration.LocationMode.NORMAL;
 		mMapView = (MapView) view.findViewById(R.id.bmapView);
 		mBaiduMap = mMapView.getMap();
+		// 开启定位图层
+		mBaiduMap.setMyLocationEnabled(true);
+
 		mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
 		mBaiduMap.setMapStatus(MapStatusUpdateFactory.zoomTo(15));
 		// 初始化搜索模块，注册事件监听
@@ -185,15 +194,33 @@ public class HomeFragment extends Fragment implements OnGetGeoCoderResultListene
 			super.handleMessage(msg);
 
 			 location = msg.getData().getParcelable("loc");
-			if (location != null) {
-				LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
-				BitmapDescriptor bitmap = null;
-				bitmap = BitmapDescriptorFactory.fromResource(R.drawable.icon_openmap_focuse_mark);
-				// 构建MarkerOption，用于在地图上添加Marker
-				OverlayOptions option = new MarkerOptions().position(point).icon(bitmap);
-				// 在地图上添加Marker，并显示
-				mBaiduMap.addOverlay(option);
-				mBaiduMap.setMapStatus(MapStatusUpdateFactory.newLatLng(point));
+//			if (location != null) {
+//				LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
+//				BitmapDescriptor bitmap = null;
+//				bitmap = BitmapDescriptorFactory.fromResource(R.drawable.icon_openmap_focuse_mark);
+//				// 构建MarkerOption，用于在地图上添加Marker
+//				OverlayOptions option = new MarkerOptions().position(point).icon(bitmap);
+//				// 在地图上添加Marker，并显示
+//				mBaiduMap.addOverlay(option);
+//				mBaiduMap.setMapStatus(MapStatusUpdateFactory.newLatLng(point));
+//			}
+			MyLocationData locData = new MyLocationData.Builder()
+					.accuracy(location.getRadius())
+							// 此处设置开发者获取到的方向信息，顺时针0-360
+					.direction(100).latitude(location.getLatitude())
+					.longitude(location.getLongitude()).build();
+			mBaiduMap.setMyLocationData(locData);
+			if (isFirstLoc) {
+				isFirstLoc = false;
+				LatLng point = new LatLng(location.getLatitude(),
+						location.getLongitude());
+				MapStatus.Builder builder = new MapStatus.Builder();
+				builder.target(point).zoom(18.0f);
+				mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
+//                mCurrentMarker = BitmapDescriptorFactory
+//                        .fromResource(R.drawable.icon_openmap_focuse_mark);
+				mBaiduMap.setMyLocationConfigeration(new MyLocationConfiguration(
+						mCurrentMode, true, mCurrentMarker));
 			}
 		}
 	};
@@ -224,16 +251,6 @@ public class HomeFragment extends Fragment implements OnGetGeoCoderResultListene
 			return;
 		}
 		mBaiduMap.clear();
-		if (location != null) {
-			LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
-			BitmapDescriptor bitmap = null;
-			bitmap = BitmapDescriptorFactory.fromResource(R.drawable.icon_openmap_focuse_mark);
-			// 构建MarkerOption，用于在地图上添加Marker
-			OverlayOptions option = new MarkerOptions().position(point).icon(bitmap);
-			// 在地图上添加Marker，并显示
-			mBaiduMap.addOverlay(option);
-			mBaiduMap.setMapStatus(MapStatusUpdateFactory.newLatLng(point));
-		}
 		mBaiduMap.addOverlay(new MarkerOptions().position(result.getLocation())
 				.icon(BitmapDescriptorFactory
 						.fromResource(R.drawable.icon_gcoding)));

@@ -2,6 +2,7 @@ package com.myresources.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
@@ -10,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
@@ -33,40 +33,63 @@ import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.baidu.navisdk.adapter.BNOuterTTSPlayerCallback;
+import com.baidu.navisdk.adapter.BNaviSettingManager;
+import com.baidu.navisdk.adapter.BaiduNaviManager;
+import com.baidu.navisdk.adapter.BaiduNaviManager.NaviInitListener;
 import com.myresources.R;
 
+import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
+
 public class HomeFragment extends Fragment implements OnGetGeoCoderResultListener {
-	public LocationClient mLocationClient = null;
-	public BDLocationListener myListener = new MyLocationListener();
-	private LocationClientOption mOption,DIYoption;
-	GeoCoder mSearch = null; // 搜索模块，也可去掉地图模块独立使用
-	boolean isFirstLoc = true; // 是否首次定位
-	BitmapDescriptor mCurrentMarker;
-	private MyLocationConfiguration.LocationMode mCurrentMode;
 	//获取地图控件引用
 	MapView mMapView = null;
 	BaiduMap mBaiduMap;
-	View view;
-	private TextView main_tv;
+	public LocationClient mLocationClient = null;
+	private MyLocationConfiguration.LocationMode mCurrentMode;//设置定位显示样式
+	GeoCoder mSearch = null; // 搜索模块，也可去掉地图模块独立使用
+	public BDLocationListener myListener = new MyLocationListener(); //注册监听函数
+	private LocationClientOption mOption;//配置定位SDK参数
+	public static List<Activity> activityList = new LinkedList<Activity>();
+	//应用程序文件夹名称
+	private static final String APP_FOLDER_NAME = "BNSDKSimpleDemo";
+	public static final String ROUTE_PLAN_NODE = "routePlanNode";
+	public static final String SHOW_CUSTOM_ITEM = "showCustomItem";
+	public static final String RESET_END_NODE = "resetEndNode";
+	public static final String VOID_MODE = "voidMode";
 	@Override
 	public void onAttach(Activity activity) {
-		// TODO Auto-generated method stub
 		super.onAttach(activity);
 		Log.d("---111-----", "onAttach");
 	}
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		Log.d("---111-----", "onCreate");
-
+		if (initDirs()) {
+			initNavi();
+		}
 	}
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Log.d("---111-----", "onCreateView");
-		View view = inflater.inflate(R.layout.main_fragment,null);
-		mCurrentMode = MyLocationConfiguration.LocationMode.NORMAL;
-		mMapView = (MapView) view.findViewById(R.id.bmapView);
+		return inflater.inflate(R.layout.main_fragment,null);
+	}
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		this.setUpView();
+		Log.d("---111-----", "onActivityCreated");
+	}
+
+	/**
+	 * 初始化百度地图参数
+	 */
+	private  void  setUpView(){
+		mCurrentMode = MyLocationConfiguration.LocationMode.FOLLOWING;//跟随样式 COMPASS 罗盘 FOLLOWING 跟随 NORMAL 普通
+		mMapView = (MapView) getView().findViewById(R.id.bmapView);
 		mBaiduMap = mMapView.getMap();
 		// 开启定位图层
 		mBaiduMap.setMyLocationEnabled(true);
@@ -76,25 +99,20 @@ public class HomeFragment extends Fragment implements OnGetGeoCoderResultListene
 		// 初始化搜索模块，注册事件监听
 		mSearch = GeoCoder.newInstance();
 		mSearch.setOnGetGeoCodeResultListener(this);
-		return view;
-	}
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super.onActivityCreated(savedInstanceState);
+
 		/**
 		 * 发起搜索
 		 *
 		 * @param v
 		 */
-		  getView().findViewById(R.id.patient_query_ic).setOnClickListener(new View.OnClickListener() {
-			 @Override
-			 public void onClick(View v) {
-				 EditText editGeoCodeKey = (EditText) getView().findViewById(R.id.patient_search);
-				 // Geo搜索
-				 mSearch.geocode(new GeoCodeOption().city("").address(editGeoCodeKey.getText().toString()));
-			 }
-		 });
+		getView().findViewById(R.id.patient_query_ic).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				EditText editGeoCodeKey = (EditText)  getView().findViewById(R.id.patient_search);
+				// Geo搜索
+				mSearch.geocode(new GeoCodeOption().city("").address(editGeoCodeKey.getText().toString()));
+			}
+		});
 		LocationClientOption mOption = getDefaultLocationClientOption();
 		mOption.setLocationMode(LocationClientOption.LocationMode.Battery_Saving);
 		mOption.setCoorType("bd09ll");
@@ -102,20 +120,17 @@ public class HomeFragment extends Fragment implements OnGetGeoCoderResultListene
 		mLocationClient.setLocOption(mOption);
 		mLocationClient.registerLocationListener( myListener );    //注册监听函数
 		mLocationClient.start();
-		Log.d("---111-----", "onActivityCreated");
-	}
 
+	}
 
 	@Override
 	public void onStart() {
-		// TODO Auto-generated method stub
 		super.onStart();
 		Log.d("---111-----",  "onStart");
 	}
 
 	@Override
 	public void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		//在activity执行onResume时执行mMapView. onResume ()，实现地图生命周期管理
 		mMapView.onResume();
@@ -126,7 +141,6 @@ public class HomeFragment extends Fragment implements OnGetGeoCoderResultListene
 
 	@Override
 	public void onPause() {
-		// TODO Auto-generated method stub
 		super.onPause();
 		//在activity执行onPause时执行mMapView. onPause ()，实现地图生命周期管理
 		mMapView.onPause();
@@ -134,20 +148,17 @@ public class HomeFragment extends Fragment implements OnGetGeoCoderResultListene
 	}
 	@Override
 	public void onStop() {
-		// TODO Auto-generated method stub
 		super.onStop();
 		Log.d("---111-----",  "onStop");
 	}
 	@Override
 	public void onDestroyView() {
-		// TODO Auto-generated method stub
 		super.onDestroyView();
 		Log.d("---111-----",  "onDestroyView");
 	}
 
 	@Override
 	public void onDestroy() {
-		// TODO Auto-generated method stub
 		super.onDestroy();
 		mLocationClient.registerLocationListener(myListener);
 		mLocationClient.stop();
@@ -157,7 +168,6 @@ public class HomeFragment extends Fragment implements OnGetGeoCoderResultListene
 	}
 	@Override
 	public void onDetach() {
-		// TODO Auto-generated method stub
 		super.onDetach();
 		Log.d("---111-----",  "onDetach");
 	}
@@ -185,9 +195,11 @@ public class HomeFragment extends Fragment implements OnGetGeoCoderResultListene
 		}
 	}
 	BDLocation location =null;
+	BitmapDescriptor mCurrentMarker;
 	/***
 	 * 接收定位结果消息，并显示在地图上
 	 */
+
 	private Handler locHander = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
@@ -210,8 +222,6 @@ public class HomeFragment extends Fragment implements OnGetGeoCoderResultListene
 					.direction(100).latitude(location.getLatitude())
 					.longitude(location.getLongitude()).build();
 			mBaiduMap.setMyLocationData(locData);
-//			if (isFirstLoc) {
-				isFirstLoc = false;
 				LatLng point = new LatLng(location.getLatitude(),
 						location.getLongitude());
 				MapStatus.Builder builder = new MapStatus.Builder();
@@ -221,7 +231,6 @@ public class HomeFragment extends Fragment implements OnGetGeoCoderResultListene
 //                        .fromResource(R.drawable.icon_openmap_focuse_mark);
 				mBaiduMap.setMyLocationConfigeration(new MyLocationConfiguration(
 						mCurrentMode, true, mCurrentMarker));
-//			}
 		}
 	};
 	public LocationClientOption getDefaultLocationClientOption(){
@@ -242,7 +251,7 @@ public class HomeFragment extends Fragment implements OnGetGeoCoderResultListene
 		}
 		return mOption;
 	}
-
+	//根据输入的信息来查询所在的位置
 	@Override
 	public void onGetGeoCodeResult(GeoCodeResult result) {
 		if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
@@ -261,6 +270,7 @@ public class HomeFragment extends Fragment implements OnGetGeoCoderResultListene
 		Toast.makeText(getContext(), strInfo, Toast.LENGTH_LONG).show();
 	}
 
+	//根据输入的坐标来查询所在的位置
 	@Override
 	public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
 		if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
@@ -278,4 +288,125 @@ public class HomeFragment extends Fragment implements OnGetGeoCoderResultListene
 				Toast.LENGTH_LONG).show();
 
 	}
+
+
+	private String mSDCardPath = null;
+	private boolean initDirs() {
+		mSDCardPath = getSdcardDir();
+		if (mSDCardPath == null) {
+			return false;
+		}
+		File f = new File(mSDCardPath, APP_FOLDER_NAME);
+		if (!f.exists()) {
+			try {
+				f.mkdir();
+			} catch (Exception e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
+		return true;
+	}
+	private String getSdcardDir() {
+		if (Environment.getExternalStorageState().equalsIgnoreCase(Environment.MEDIA_MOUNTED)) {
+			return Environment.getExternalStorageDirectory().toString();
+		}
+		return null;
+	}
+
+	String authinfo = null;
+	private void initNavi() {
+
+		BNOuterTTSPlayerCallback ttsCallback = null;
+
+		BaiduNaviManager.getInstance().init(getActivity(), mSDCardPath, APP_FOLDER_NAME, new NaviInitListener() {
+			@Override
+			public void onAuthResult(int status, String msg) {
+				if (0 == status) {
+					authinfo = "key校验成功!";
+				} else {
+					authinfo = "key校验失败, " + msg;
+				}
+				getActivity().runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						Toast.makeText(getActivity(), authinfo, Toast.LENGTH_LONG).show();
+					}
+				});
+			}
+
+			public void initSuccess() {
+				Toast.makeText(getActivity(), "百度导航引擎初始化成功", Toast.LENGTH_SHORT).show();
+				initSetting();
+			}
+
+			public void initStart() {
+				Toast.makeText(getActivity(), "百度导航引擎初始化开始", Toast.LENGTH_SHORT).show();
+			}
+
+			public void initFailed() {
+				Toast.makeText(getActivity(), "百度导航引擎初始化失败", Toast.LENGTH_SHORT).show();
+			}
+
+
+		},  null, ttsHandler, null);
+
+	}
+	//导航中部分设置项的设置
+	private void initSetting(){
+		BNaviSettingManager.setDayNightMode(BNaviSettingManager.DayNightMode.DAY_NIGHT_MODE_DAY);
+		BNaviSettingManager.setShowTotalRoadConditionBar(BNaviSettingManager.PreViewRoadCondition.ROAD_CONDITION_BAR_SHOW_ON);
+		BNaviSettingManager.setVoiceMode(BNaviSettingManager.VoiceMode.Veteran);
+		BNaviSettingManager.setPowerSaveMode(BNaviSettingManager.PowerSaveMode.DISABLE_MODE);
+		BNaviSettingManager.setRealRoadCondition(BNaviSettingManager.RealRoadCondition.NAVI_ITS_ON);
+	}
+
+	/**
+	 * 内部TTS播报状态回传handler
+	 */
+	private Handler ttsHandler = new Handler() {
+		public void handleMessage(Message msg) {
+			int type = msg.what;
+			switch (type) {
+				case BaiduNaviManager.TTSPlayMsgType.PLAY_START_MSG: {
+					showToastMsg("Handler : TTS play start");
+					break;
+				}
+				case BaiduNaviManager.TTSPlayMsgType.PLAY_END_MSG: {
+					showToastMsg("Handler : TTS play end");
+					break;
+				}
+				default :
+					break;
+			}
+		}
+	};
+
+	/**
+	 * 内部TTS播报状态回调接口
+	 */
+	private BaiduNaviManager.TTSPlayStateListener ttsPlayStateListener = new BaiduNaviManager.TTSPlayStateListener() {
+
+		@Override
+		public void playEnd() {
+//	            showToastMsg("TTSPlayStateListener : TTS play end");
+		}
+
+		@Override
+		public void playStart() {
+//	            showToastMsg("TTSPlayStateListener : TTS play start");
+		}
+	};
+
+	public void showToastMsg(final String msg) {
+		getActivity().runOnUiThread(new Runnable() {
+
+			@Override
+			public void run() {
+				Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+			}
+		});
+	}
+
 }

@@ -210,7 +210,7 @@ public class HomeFragment extends Fragment implements OnGetGeoCoderResultListene
 					.direction(100).latitude(location.getLatitude())
 					.longitude(location.getLongitude()).build();
 			mBaiduMap.setMyLocationData(locData);
-			if (isFirstLoc) {
+//			if (isFirstLoc) {
 				isFirstLoc = false;
 				LatLng point = new LatLng(location.getLatitude(),
 						location.getLongitude());
@@ -221,7 +221,7 @@ public class HomeFragment extends Fragment implements OnGetGeoCoderResultListene
 //                        .fromResource(R.drawable.icon_openmap_focuse_mark);
 				mBaiduMap.setMyLocationConfigeration(new MyLocationConfiguration(
 						mCurrentMode, true, mCurrentMarker));
-			}
+//			}
 		}
 	};
 	public LocationClientOption getDefaultLocationClientOption(){

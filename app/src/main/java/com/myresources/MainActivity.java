@@ -94,6 +94,7 @@ public class MainActivity extends MyBaseActivity {
 
     @Override
     public void onClick(View v) {
+        super.onClick(v);
         switch (v.getId()) {
             case R.id.btn_tab1:
                 viewpager.setCurrentItem(0);

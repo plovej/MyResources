@@ -1,4 +1,4 @@
-package com.myresources;
+package com.myresources.activity;
 
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 
+import com.myresources.R;
 import com.myresources.video.DisplayUtils;
 import com.myresources.video.ImageRender;
 import com.myresources.video.PlayDataBean;

@@ -20,7 +20,7 @@ import java.util.List;
  * 定位 在fragment里面没有办法实现只能在Activity中
  * 邮箱：fanzhanpeng@hskbj.com
  */
-public class SetLocationActivity extends Activity {
+public class SetLocationActivity extends MyBaseActivity {
     public LocationClient mLocationClient = null;
     private TextView LocationResult;
     public BDLocationListener myListener = new MyLocationListener();

@@ -1,4 +1,4 @@
-package com.myresources;
+package com.myresources.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +16,7 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.myresources.R;
 import com.myresources.util.DialogOfSetting;
 import com.myresources.util.NetWorkUtil;
 import com.myresources.util.SystemBarTintManager;

@@ -1,4 +1,4 @@
-package com.myresources;
+package com.myresources.activity;
 
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -8,8 +8,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 
+import com.myresources.R;
 import com.myresources.fragment.FaXianFragment;
 import com.myresources.fragment.HomeFragment;
 import com.myresources.fragment.MeFragment;
@@ -54,6 +56,22 @@ public class MainActivity extends MyBaseActivity {
         bt4.setOnClickListener(this);
         bt5.setOnClickListener(this);
 
+        /**
+         * 监听软件盘
+         */
+//        bt1.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+//                int heightDiff = bt1.getRootView().getHeight() - bt1.getHeight();
+//                if(heightDiff > 300){
+//                    //软件盘弹出
+//                    bt1.setVisibility(View.VISIBLE);
+//                }else{
+//                    //软键盘收起
+//                    bt1.setVisibility(View.GONE);
+//                }
+//            }
+//        });
         list_fragment = new ArrayList<Fragment>();
         list_fragment.add(new HomeFragment());
         list_fragment.add(new VideoFragment());

@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,7 @@ import android.widget.Toast;
 import com.myresources.R;
 import com.myresources.util.DialogOfSetting;
 import com.myresources.util.NetWorkUtil;
+import com.myresources.util.ProgressDialogUtil;
 import com.myresources.util.SystemBarTintManager;
 
 /**
@@ -26,7 +29,6 @@ import com.myresources.util.SystemBarTintManager;
  * 简介：父activity
  */
 public class MyBaseActivity extends FragmentActivity implements View.OnClickListener {
-
     private View mBaseActivityContainer;
     private FrameLayout mTemplateContainer;
     /** 加载失败界面*/
@@ -142,12 +144,35 @@ public class MyBaseActivity extends FragmentActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        if(NetWorkUtil.getNetWorkInfoType(getApplicationContext())==NetWorkUtil.NONE){
-            loadError(true);
-        }else{
-            loadError(false);
-        }
+        ProgressDialogUtil.showDefaultProgerss(this,null);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1500);
+                    handler.sendEmptyMessage(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
     }
+    private Handler  handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if(NetWorkUtil.getNetWorkInfoType(getApplicationContext())==NetWorkUtil.NONE){
+                ProgressDialogUtil.closeDefalutProgerss();
+                Log.e("网络连接", "1ture");
+                loadError(true);
+            }else{
+                ProgressDialogUtil.closeDefalutProgerss();
+                Log.e("网络连接", "2false");
+                loadError(false);
+            }
+        }
+    };
 
     /**
      * intent封装 ,不支持参数,无参跳转
@@ -271,4 +296,22 @@ public class MyBaseActivity extends FragmentActivity implements View.OnClickList
         void onCancle(View v);
     }
 
+    /**
+     * 网络刷新监听事件变量
+     */
+    public ClickRefresh onClickRefresh;
+    /**
+     * 网络点击刷新方法
+     */
+    public interface  ClickRefresh{
+        void onRefresh();
+    }
+
+    /**
+     * 设置点击事件
+     * @param l
+     */
+    public void setOnClickRefresh(ClickRefresh l){
+        onClickRefresh = l ;
+    }
 }

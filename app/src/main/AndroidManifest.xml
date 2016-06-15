@@ -57,6 +57,8 @@
             android:enabled="true"
             android:process=":remote">
         </service>
+        <!-- 路线规划activ-->
+        <activity android:name=".baidu.PathplanningActivity"/>
     </application>
 
 </manifest>

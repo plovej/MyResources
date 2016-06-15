@@ -1,6 +1,7 @@
 package com.myresources.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -26,6 +27,7 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.map.UiSettings;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.core.SearchResult;
 import com.baidu.mapapi.search.geocode.GeoCodeOption;
@@ -38,6 +40,7 @@ import com.baidu.navisdk.adapter.BNaviSettingManager;
 import com.baidu.navisdk.adapter.BaiduNaviManager;
 import com.baidu.navisdk.adapter.BaiduNaviManager.NaviInitListener;
 import com.myresources.R;
+import com.myresources.baidu.PathplanningActivity;
 
 import java.io.File;
 import java.util.LinkedList;
@@ -48,6 +51,7 @@ public class HomeFragment extends Fragment implements OnGetGeoCoderResultListene
 	MapView mMapView = null;
 	BaiduMap mBaiduMap;
 	public LocationClient mLocationClient = null;
+	private UiSettings mUiSettings;//设置控制功能
 	private MyLocationConfiguration.LocationMode mCurrentMode;//设置定位显示样式
 	GeoCoder mSearch = null; // 搜索模块，也可去掉地图模块独立使用
 	public BDLocationListener myListener = new MyLocationListener(); //注册监听函数
@@ -59,6 +63,7 @@ public class HomeFragment extends Fragment implements OnGetGeoCoderResultListene
 	public static final String SHOW_CUSTOM_ITEM = "showCustomItem";
 	public static final String RESET_END_NODE = "resetEndNode";
 	public static final String VOID_MODE = "voidMode";
+
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -90,16 +95,20 @@ public class HomeFragment extends Fragment implements OnGetGeoCoderResultListene
 	private  void  setUpView(){
 		mCurrentMode = MyLocationConfiguration.LocationMode.FOLLOWING;//跟随样式 COMPASS 罗盘 FOLLOWING 跟随 NORMAL 普通
 		mMapView = (MapView) getView().findViewById(R.id.bmapView);
+
 		mBaiduMap = mMapView.getMap();
 		// 开启定位图层
 		mBaiduMap.setMyLocationEnabled(true);
+		//是否启用旋转手势
+		mUiSettings = mBaiduMap.getUiSettings();
+		mUiSettings.setRotateGesturesEnabled(false);
 
 		mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
 		mBaiduMap.setMapStatus(MapStatusUpdateFactory.zoomTo(15));
 		// 初始化搜索模块，注册事件监听
 		mSearch = GeoCoder.newInstance();
 		mSearch.setOnGetGeoCodeResultListener(this);
-
+		mUiSettings = mBaiduMap.getUiSettings();
 		/**
 		 * 发起搜索
 		 *
@@ -108,7 +117,7 @@ public class HomeFragment extends Fragment implements OnGetGeoCoderResultListene
 		getView().findViewById(R.id.patient_query_ic).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				EditText editGeoCodeKey = (EditText)  getView().findViewById(R.id.patient_search);
+				EditText editGeoCodeKey = (EditText) getView().findViewById(R.id.patient_search);
 				// Geo搜索
 				mSearch.geocode(new GeoCodeOption().city("").address(editGeoCodeKey.getText().toString()));
 			}
@@ -118,8 +127,17 @@ public class HomeFragment extends Fragment implements OnGetGeoCoderResultListene
 		mOption.setCoorType("bd09ll");
 		mLocationClient = new LocationClient(getContext());     //声明LocationClient类
 		mLocationClient.setLocOption(mOption);
-		mLocationClient.registerLocationListener( myListener );    //注册监听函数
+		mLocationClient.registerLocationListener(myListener);    //注册监听函数
 		mLocationClient.start();
+
+		//路线的点击事件
+		getView().findViewById(R.id.head_img).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getActivity(), PathplanningActivity.class);
+				startActivity(intent);
+			}
+		});
 
 	}
 

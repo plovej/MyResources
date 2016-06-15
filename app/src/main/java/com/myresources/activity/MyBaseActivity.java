@@ -166,6 +166,7 @@ public class MyBaseActivity extends FragmentActivity implements View.OnClickList
                 ProgressDialogUtil.closeDefalutProgerss();
                 Log.e("网络连接", "1ture");
                 loadError(true);
+                showToast("无网络");
             }else{
                 ProgressDialogUtil.closeDefalutProgerss();
                 Log.e("网络连接", "2false");

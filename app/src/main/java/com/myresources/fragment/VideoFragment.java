@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.myresources.R;
-import com.myresources.VideoActivity;
+import com.myresources.activity.VideoActivity;
 
 public class VideoFragment extends Fragment{
 	private View view;

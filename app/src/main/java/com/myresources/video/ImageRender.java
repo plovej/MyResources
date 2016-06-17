@@ -4,7 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.widget.ImageView;
 
-import com.myresources.VideoActivity;
+import com.myresources.activity.VideoActivity;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;

@@ -39,7 +39,7 @@
         <meta-data android:name="com.baidu.lbsapi.API_KEY"
             android:value="DD279b2a90afdf0ae7a3796787a0742e" />
 
-        <activity android:name=".MainActivity" >
+        <activity android:name=".activity.MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -47,7 +47,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.SetLocationActivity"/>
-        <activity android:name=".VideoActivity"
+        <activity android:name=".activity.VideoActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan"

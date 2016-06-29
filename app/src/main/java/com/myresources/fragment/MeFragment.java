@@ -6,16 +6,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.myresources.R;
-import com.myresources.activity.SetLocationActivity;
+import com.myresources.baidu.BNDemoMainActivity;
 
 /**
  * 百度地图定位
  */
-public class MeFragment extends Fragment implements View.OnClickListener {
-	private TextView LocationResult;
+public class MeFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -37,20 +35,14 @@ public class MeFragment extends Fragment implements View.OnClickListener {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		LocationResult = (TextView) getView().findViewById(R.id.textView1);
-		LocationResult.setOnClickListener(this);
+		getView().findViewById(R.id.luxian).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getActivity(), BNDemoMainActivity.class);
+				startActivity(intent);
+			}
+		});
 	}
 
 
-	@Override
-	public void onClick(View v) {
-	switch (v.getId()){
-		case R.id.textView1:
-			Intent intent = new Intent(getActivity(), SetLocationActivity.class);
-			startActivity(intent);
-			break;
-		default:
-			break;
-	}
-	}
 }

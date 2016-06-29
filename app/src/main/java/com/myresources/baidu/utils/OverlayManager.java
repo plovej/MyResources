@@ -13,8 +13,8 @@ import java.util.List;
 
 import static com.baidu.mapapi.map.BaiduMap.OnMarkerClickListener;
 
-/**
- * 该类提供一个能够显示和管理多个Overlay的基类
+/**示和
+ * 该类提供一个能够显管理多个Overlay的基类
  * <p>
  * 复写{@link #getOverlayOptions()} 设置欲显示和管理的Overlay列表
  * </p>

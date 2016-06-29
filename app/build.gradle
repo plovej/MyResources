@@ -15,6 +15,7 @@ android {
         main {
             jniLibs.srcDirs = ['libs']
         }
+
     }
     buildTypes {
         release {

@@ -36,6 +36,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
         <!--增加百度LBS密钥，将下面的key值修改为在LBS开放平台申请的AK。-->
+        <meta-data
+            android:name="BaiduMobAd_STAT_ID"
+            android:value="48ae76de3f" />
         <meta-data android:name="com.baidu.lbsapi.API_KEY"
             android:value="DD279b2a90afdf0ae7a3796787a0742e" />
 
@@ -58,7 +61,21 @@
             android:process=":remote">
         </service>
         <!-- 路线规划activ-->
-        <activity android:name=".baidu.PathplanningActivity"/>
+        <activity android:name=".baidu.PathplanningActivity">
+            <intent-filter>
+                <action android:name="com.myresources.baidu.PathplanningActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".baidu.BNDemoGuideActivity"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+             >
+        </activity>
+        <activity
+            android:name=".baidu.BNDemoMainActivity"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"/>
     </application>
 
 </manifest>

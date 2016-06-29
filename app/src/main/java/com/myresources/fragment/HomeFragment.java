@@ -73,9 +73,9 @@ public class HomeFragment extends Fragment implements OnGetGeoCoderResultListene
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d("---111-----", "onCreate");
-		if (initDirs()) {
-			initNavi();
-		}
+//		if (initDirs()) {
+//			initNavi();
+//		}
 	}
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -108,7 +108,6 @@ public class HomeFragment extends Fragment implements OnGetGeoCoderResultListene
 		// 初始化搜索模块，注册事件监听
 		mSearch = GeoCoder.newInstance();
 		mSearch.setOnGetGeoCodeResultListener(this);
-		mUiSettings = mBaiduMap.getUiSettings();
 		/**
 		 * 发起搜索
 		 *
@@ -136,7 +135,17 @@ public class HomeFragment extends Fragment implements OnGetGeoCoderResultListene
 			public void onClick(View v) {
 				Intent intent = new Intent(getActivity(), PathplanningActivity.class);
 				startActivity(intent);
-			}
+				//隐式调整 需要在清单文件里配对
+//				Intent intent = new Intent();
+//				intent.setAction("com.myresources.baidu.PathplanningActivity");
+//				startActivity(intent);
+
+//				Intent intent = new Intent("android.intent.action.MAIN");
+//				intent.setClassName("com.myresources", "com.myresources.baidu.PathplanningActivity");
+//				//intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);//Android启动方式
+//				startActivity(intent);
+
+				}
 		});
 
 	}

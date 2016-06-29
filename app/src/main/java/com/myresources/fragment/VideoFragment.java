@@ -1,5 +1,6 @@
 package com.myresources.fragment;
 
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.myresources.R;
+import com.myresources.activity.VideoActivity;
 import com.myresources.tuwenhunpai.AnalysisJSON;
 import com.myresources.tuwenhunpai.Content;
 import com.myresources.tuwenhunpai.ImgTxtAdapter;
@@ -52,7 +54,13 @@ public class VideoFragment extends Fragment{
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		getAssetsData();
-
+			getView().findViewById(R.id.video_tv).setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(getActivity(), VideoActivity.class);
+					startActivity(intent);
+				}
+			});
 		img_txt_list = (ListView)getView().findViewById(R.id.img_txt_list);
 		adapter = new ImgTxtAdapter(getContext(), list);
 		img_txt_list.setAdapter(adapter);

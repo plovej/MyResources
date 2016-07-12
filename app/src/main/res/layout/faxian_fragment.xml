@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+	android:orientation="vertical"
+	>
 
 	<com.myresources.util.RotateTextView
 		android:layout_width="wrap_content"
@@ -11,5 +14,94 @@
 		android:text="我是你的哥哥"
 
 	    />
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="80dp">
 
-</RelativeLayout>
+		<View
+			android:layout_width="30dp"
+			android:layout_height="20dp"
+			android:layout_alignParentTop="true"
+			android:layout_centerHorizontal="true"
+			android:background="@drawable/triangle" />
+
+		<com.myresources.chizi.RulerView
+			android:id="@+id/ruler_view"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_alignParentTop="true"
+			android:background="#0eff0000"
+			android:gravity="top"
+			app:begin="0"
+		app:end="100"
+		app:indicateColor="#F5BE35"
+		app:indicatePadding="10dp"
+		app:indicateWidth="1dp"
+		app:selectColor="@android:color/holo_blue_bright"
+		app:textColor="#D78B1C"
+		app:textSize="18sp" />
+	</RelativeLayout>
+
+	<RelativeLayout
+		android:id="@+id/blood_sugar_value_parent"
+		android:layout_width="match_parent"
+		android:layout_height="180dp"
+		>
+
+		<TextView
+			android:id="@+id/blood_sugar_value"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerHorizontal="true"
+			android:textColor="@color/color_6D9EFF"
+			android:background="@drawable/btn_style_alert_dialog_button_normal"
+			android:gravity="center" />
+
+		<View
+			android:id="@+id/blood_sugar_line"
+			android:layout_width="30dp"
+			android:layout_height="20dp"
+			android:layout_below="@id/blood_sugar_value"
+			android:layout_centerHorizontal="true"
+			android:background="@drawable/triangle" />
+
+		<com.myresources.chizi.SimpleRulerView
+			android:id="@+id/ruler_view2"
+			android:layout_below="@id/blood_sugar_line"
+			android:layout_width="match_parent"
+			android:layout_height="60dp"
+			android:layout_marginTop="10dp"
+			app:intervalValue="0.1"
+			app:maxValue="100"
+			app:minValue="0"
+			app:retainLength="1"
+			app:rulerColor="@color/green"
+			app:mTextColor="@color/green" />
+			<!--
+			app:intervalValue="0.1"//尺子的度数相隔
+			 app:retainLength="1"//这个暂时我认为是显示小数 如果上面设置间隔为0.1 这个必须设置这个是保留小数点长度
+			-->
+
+
+
+		<Button
+			android:id="@+id/blood_sugar_minus"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginRight="60dp"
+			android:layout_marginTop="5dp"
+			android:text="+"
+			android:layout_toLeftOf="@id/blood_sugar_value"
+			 />
+
+		<Button
+			android:id="@+id/blood_sugar_add"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="60dp"
+			android:layout_marginTop="5dp"
+			android:text="-"
+			android:layout_toRightOf="@id/blood_sugar_value"
+			/>
+	</RelativeLayout>
+</LinearLayout>

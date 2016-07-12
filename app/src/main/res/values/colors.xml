@@ -26,4 +26,6 @@
     <color name="common_line_bg">#FFCBCCCD</color>
     <!-- 内容页 背景色 灰色 -->
     <color name="fanxq_content_bg">#EFEFEF</color>
+    <color name="color_6D9EFF">#6D9EFF</color>
+    <color name="green">#45c01a</color>
 </resources>

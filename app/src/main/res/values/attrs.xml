@@ -168,4 +168,30 @@
         </attr>
     </declare-styleable>
 
+    //---------------------------尺子的一些设置
+    //scale
+    <declare-styleable name="RulerView">
+        <attr name="indicateColor" format="color|reference" />
+        <attr name="selectColor" format="color|reference" />
+        <attr name="textColor" format="color|reference" />
+        <attr name="textSize" format="dimension|reference"/>
+        <attr name="begin" format="integer|reference" />
+        <attr name="end" format="integer|reference" />
+        <attr name="indicateWidth" format="dimension|reference" />
+        <attr name="indicatePadding" format="dimension|reference" />
+    </declare-styleable>
+
+    <!-- simpleRulerView-->
+    <declare-styleable name="simpleRulerView">
+        <attr name="highlightColor" format="color|reference" />
+        <attr name="rulerColor" format="color|reference" />
+        <attr name="mTextColor" format="color|reference" />
+        <attr name="intervalDistance" format="dimension" />
+        <attr name="intervalValue" format="float" />
+        <attr name="maxValue" format="float" />
+        <attr name="minValue" format="float" />
+        <attr name="mTextSize" format="dimension" />
+        <attr name="rulerLineWidth" format="dimension" />
+        <attr name="retainLength" format="integer"/>
+    </declare-styleable>
 </resources>

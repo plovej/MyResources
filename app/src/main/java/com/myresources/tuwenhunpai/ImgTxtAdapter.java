@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.myresources.R;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class ImgTxtAdapter extends BaseAdapter {
@@ -49,20 +50,21 @@ public class ImgTxtAdapter extends BaseAdapter {
 	public boolean isEnabled(int position) { //����listView��ÿ��item�ĸ���Ч��
 		return false;
 	}
-
+	public HashMap<Integer,View> lmap = new HashMap<Integer,View>();
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		MyView mv;
-		if(null == convertView){
+		if(lmap.get(position) == null){
 			mv = new MyView();
 			convertView = inf.inflate(R.layout.img_txt_item, null);
-
 			mv.img = (ImageButton)convertView.findViewById(R.id.img);
 			mv.txt = (TextView)convertView.findViewById(R.id.txt);
 			mv.course_main_videoplayview = convertView.findViewById(R.id.course_main_videoplayview);
+			lmap.put(position, convertView);
 			convertView.setTag(mv);
 
 		} else {
+			convertView = lmap.get(position);
 			mv = (MyView) convertView.getTag();
 		}
 
@@ -74,7 +76,7 @@ public class ImgTxtAdapter extends BaseAdapter {
 		} else if(content.isVideo_()){
 			mv.img.setVisibility(View.GONE);
 			mv.txt.setVisibility(View.GONE);
-		}else {
+		}else {lmap.put(position, convertView);
 			mv.txt.setText(content.getDetails());
 			mv.img.setVisibility(View.GONE);
 			mv.course_main_videoplayview.setVisibility(View.GONE);
